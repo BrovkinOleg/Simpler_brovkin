@@ -16,9 +16,9 @@ class SimplerLogger
   private
 
   def message(status, headers, env)
-    "Request: #{env['REQUEST_METHOD']} #{env['REQUEST_URI']}" \
-    "Handler: #{env['simpler.controller'].class}##{env['simpler.action']}" \
-    "Parameters: #{env['simpler.params']}" \
-    "Response: #{status} [#{headers['Content-Type']}] #{env['simpler.render_view']}" \
+    "Request: #{env['REQUEST_METHOD']} #{env['REQUEST_URI']}, " \
+    "Handler: #{env['simpler.controller'].class}##{env['simpler.action']}, " \
+    "Parameters: #{env['simpler.params']}, " \
+    "Response: #{status} [#{headers['Content-Type']}] #{env['simpler.render_view']} " \
   end
 end
