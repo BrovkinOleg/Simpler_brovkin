@@ -66,8 +66,8 @@ module Simpler
       @response.status = code
     end
 
-    def headers
-      @response
+    def headers_set
+      @response['Content-Type'] = 'text/plain'
     end
   end
 end

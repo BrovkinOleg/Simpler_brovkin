@@ -6,7 +6,6 @@ require_relative 'controller'
 
 module Simpler
   class Application
-
     include Singleton
 
     attr_reader :db
@@ -31,7 +30,6 @@ module Simpler
       if route
         controller = route.controller.new(env)
         action = route.action
-
         make_response(controller, action)
       else
         page_not_found

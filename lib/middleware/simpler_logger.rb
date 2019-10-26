@@ -9,7 +9,6 @@ class SimplerLogger
   def call(env)
     status, headers, response = @app.call(env)
     @logger.info(message(status, headers, env))
-
     [status, headers, response]
   end
 

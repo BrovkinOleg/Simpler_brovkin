@@ -1,11 +1,9 @@
 class TestsController < Simpler::Controller
-
   def index
     @time = Time.now
-    status 201
-    headers['Content-Type'] = 'text/plain'
-
-    render_box plain: @time.to_s
+    status(201)
+    headers_set
+    render_box(plain: @time.to_s)
   end
 
   def show
