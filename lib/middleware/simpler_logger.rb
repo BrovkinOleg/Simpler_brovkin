@@ -1,7 +1,6 @@
 require 'logger'
 
 class SimplerLogger
-
   def initialize(app, log_path)
     @app = app
     @logger = Logger.new(Simpler.root.join(log_path))
