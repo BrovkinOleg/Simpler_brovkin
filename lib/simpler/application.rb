@@ -37,7 +37,7 @@ module Simpler
         page_not_found
       end
     end
-# http://localhost:9292/tests/index
+
     private
 
     def require_app
