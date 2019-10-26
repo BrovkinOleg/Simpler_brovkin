@@ -33,7 +33,7 @@ module Simpler
 
       make_response(controller, action)
     end
-
+# http://localhost:9292/tests/index
     private
 
     def require_app
