@@ -2,7 +2,6 @@ require_relative 'view'
 
 module Simpler
   class Controller
-
     attr_reader :name, :request, :response
 
     def initialize(env)
@@ -33,21 +32,18 @@ module Simpler
     end
 
     def write_response
-      if @response.body.empty?
-        body = render_body
-        @response.write(body)
-      end
+      @response.write(render_body) if @response.body.empty?
     end
 
     def render_body
-      View.new(@request.env).render(binding)
+      View.new(@request.env).render_view(binding)
     end
 
     def params
       @request.env['simpler.params'].merge!(@request.params)
     end
 
-    def render(template)
+    def render_box(template)
       if template[:plain]
         plain(template[:plain])
       elsif template[:inline]
