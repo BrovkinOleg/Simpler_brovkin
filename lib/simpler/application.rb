@@ -1,12 +1,13 @@
+require 'byebug'
+require 'rack'
 require 'yaml'
 require 'singleton'
-require 'sequel'
+# require 'sequel'
 require_relative 'router'
 require_relative 'controller'
 
 module Simpler
   class Application
-
     include Singleton
 
     attr_reader :db
@@ -17,7 +18,7 @@ module Simpler
     end
 
     def bootstrap!
-      setup_database
+      # setup_database
       require_app
       require_routes
     end
@@ -28,10 +29,15 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
-      controller = route.controller.new(env)
-      action = route.action
-
-      make_response(controller, action)
+      if route
+        env['simpler.params'] ||= {}
+        env['simpler.params'].merge!(route.params)
+        controller = route.controller.new(env)
+        action = route.action
+        make_response(controller, action)
+      else
+        page_not_found
+      end
     end
 
     private
@@ -54,5 +60,12 @@ module Simpler
       controller.make_response(action)
     end
 
+    def page_not_found
+      [
+        404,
+        { 'Content-Type' => 'text/plain' },
+        ['404 Not Found']
+      ]
+    end
   end
 end

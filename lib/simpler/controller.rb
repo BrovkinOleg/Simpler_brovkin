@@ -2,6 +2,7 @@ require_relative 'view'
 
 module Simpler
   class Controller
+    PLAIN_MODE = 'plain'
 
     attr_reader :name, :request, :response
 
@@ -14,7 +15,6 @@ module Simpler
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
-
       set_default_headers
       send(action)
       write_response
@@ -33,22 +33,32 @@ module Simpler
     end
 
     def write_response
-      body = render_body
-
-      @response.write(body)
+      @response.write(render_body) if @response.body.empty?
     end
 
     def render_body
-      View.new(@request.env).render(binding)
+      View.new(@request.env).render_view(binding)
+    end
+
+    def plain_mode(text)
+      headers_set if text == PLAIN_MODE
+      @request.env['simpler.mode'] = text
     end
 
     def params
-      @request.params
+      @request.env['simpler.params'].merge!(@request.params)
     end
 
-    def render(template)
+    def render_box(template)
       @request.env['simpler.template'] = template
     end
 
+    def status(code)
+      @response.status = code
+    end
+
+    def headers_set
+      @response['Content-Type'] = 'text/plain'
+    end
   end
 end
