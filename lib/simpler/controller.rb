@@ -39,26 +39,16 @@ module Simpler
       View.new(@request.env).render_view(binding)
     end
 
+    def plain_mode(text)
+      @request.env['simpler.plain'] = text
+    end
+
     def params
       @request.env['simpler.params'].merge!(@request.params)
     end
 
     def render_box(template)
-      if template[:plain]
-        plain(template[:plain])
-      elsif template[:inline]
-        inline(template[:inline])
-      else
-        @request.env['simpler.template'] = template
-      end
-    end
-
-    def plain(text)
-      @response.write(text)
-    end
-
-    def inline(text)
-      @response.write(ERB.new(text).result(binding))
+      @request.env['simpler.template'] = template
     end
 
     def status(code)
