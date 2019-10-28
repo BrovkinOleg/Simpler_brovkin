@@ -11,15 +11,12 @@ module Simpler
     def render_view(binding)
       template = File.read(template_path)
 
+      erb = ERB.new(template).result(binding)
       case @env['simpler.mode']
-      when 'erb'    then ERB.new(template).result(binding)
-      when 'plain'  then template
-      else template
+      when 'erb'   then erb
+      when 'plain' then template
+      else erb
       end
-    end
-
-    def render_plain
-      File.read(template_path)
     end
 
     private

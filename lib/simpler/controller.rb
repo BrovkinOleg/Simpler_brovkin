@@ -2,6 +2,8 @@ require_relative 'view'
 
 module Simpler
   class Controller
+    PLAIN_MODE = 'plain'
+
     attr_reader :name, :request, :response
 
     def initialize(env)
@@ -13,7 +15,6 @@ module Simpler
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
-
       set_default_headers
       send(action)
       write_response
@@ -40,6 +41,7 @@ module Simpler
     end
 
     def plain_mode(text)
+      headers_set if text == PLAIN_MODE
       @request.env['simpler.mode'] = text
     end
 
