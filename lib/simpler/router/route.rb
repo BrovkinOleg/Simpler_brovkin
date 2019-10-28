@@ -5,7 +5,7 @@ module Simpler
 
       def initialize(method, path, controller, action)
         @method = method
-        @router_path = array(path)
+        @path = path
         @controller = controller
         @action = action
       end
@@ -18,28 +18,31 @@ module Simpler
 
       def check_path(path)
         @params = {}
-        @request = array(path)
-        return false if @request.nil?
-        return false if @request.size != @router_path.size
+        request_path_parts = path_parts(path)
+        return false if request_path_parts.nil?
 
-        if path_match?(@router_path[0], @request[0])
-          add_params(@router_path[1], @request[1])
-          true
+        router_path_parts = path_parts(@path)
+        return false if request_path_parts.size != router_path_parts.size
+
+        router_path_parts.each_with_index do |part, index|
+          if parameter?(part)
+            add_params(part, request_path_parts[index])
+          else
+            return false unless part == request_path_parts[index]
+          end
         end
       end
 
-      def path_match?(one, two)
-        one == two
+      def parameter?(parameter)
+        parameter[0] == ':'
       end
 
       def add_params(parameter, value)
-        return if parameter.nil?
-
-        symbol = parameter.split(':')[1].to_sym
-        @params[symbol] = value if parameter[0] == ':'
+        parameter = parameter.split(':')[1].to_sym
+        @params[parameter] = value
       end
 
-      def array(path)
+      def path_parts(path)
         path.split('/').reject!(&:empty?)
       end
     end
