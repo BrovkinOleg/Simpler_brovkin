@@ -40,7 +40,7 @@ module Simpler
     end
 
     def plain_mode(text)
-      @request.env['simpler.plain'] = text
+      @request.env['simpler.mode'] = text
     end
 
     def params

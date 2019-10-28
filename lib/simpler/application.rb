@@ -32,8 +32,6 @@ module Simpler
       if route
         env['simpler.params'] ||= {}
         env['simpler.params'].merge!(route.params)
-        # plain_mode(env, 'plain')
-        plain_mode(env, 'erb')
         controller = route.controller.new(env)
         action = route.action
         make_response(controller, action)
@@ -43,10 +41,6 @@ module Simpler
     end
 
     private
-
-    def plain_mode(env, text)
-      env['simpler.mode'] = text
-    end
 
     def require_app
       Dir["#{Simpler.root}/app/**/*.rb"].each { |file| require file }

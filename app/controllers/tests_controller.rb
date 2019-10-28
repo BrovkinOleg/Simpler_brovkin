@@ -3,10 +3,13 @@ class TestsController < Simpler::Controller
     @time = Time.now
     status(201)
     headers_set
-    render_box(plain: @time.to_s)
+    # plain_mode('plain')
+    plain_mode('erb')
   end
 
   def show
+    # plain_mode('plain')
+    plain_mode('erb')
     @params = params
   end
 
