@@ -5,43 +5,41 @@ module Simpler
 
       def initialize(method, path, controller, action)
         @method = method
-        @path = path
+        @router_path = array(path)
         @controller = controller
         @action = action
-        @params = {}
       end
 
       def match?(method, path)
-        @method == method && parse_string_path(path)
+        @method == method && check_path(path)
       end
 
       private
 
-      def parse_string_path(path)
-        router_path_parts = path_parts(@path)
-        request_path_parts = path_parts(path)
+      def check_path(path)
+        @params = {}
+        @request = array(path)
+        return false if @request.nil?
+        return false if @request.size != @router_path.size
 
-        return false if request_path_parts.size != router_path_parts.size
-
-        router_path_parts.each_with_index do |part, index|
-          if parameter?(part)
-            add_params(part, request_path_parts[index])
-          else
-            return false unless part == request_path_parts[index]
-          end
+        if path_match?(@router_path[0], @request[0])
+          add_params(@router_path[1], @request[1])
+          true
         end
       end
 
-      def parameter?(parameter)
-        parameter[0] == ':'
+      def path_match?(one, two)
+        one == two
       end
 
       def add_params(parameter, value)
-        parameter = parameter.split(':')[1].to_sym
-        @params[parameter] = value
+        return if parameter.nil?
+
+        symbol = parameter.split(':')[1].to_sym
+        @params[symbol] = value if parameter[0] == ':'
       end
 
-      def path_parts(path)
+      def array(path)
         path.split('/').reject!(&:empty?)
       end
     end

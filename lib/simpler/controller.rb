@@ -55,7 +55,6 @@ module Simpler
 
     def plain(text)
       @response.write(text)
-      @response['Content-Type'] = 'text/plain'
     end
 
     def inline(text)

@@ -14,6 +14,10 @@ module Simpler
       ERB.new(template).result(binding)
     end
 
+    def plain
+
+    end
+
     private
 
     def controller

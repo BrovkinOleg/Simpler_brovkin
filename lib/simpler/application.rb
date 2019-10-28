@@ -1,6 +1,8 @@
+require 'byebug'
+require 'rack'
 require 'yaml'
 require 'singleton'
-require 'sequel'
+# require 'sequel'
 require_relative 'router'
 require_relative 'controller'
 
@@ -16,7 +18,7 @@ module Simpler
     end
 
     def bootstrap!
-      setup_database
+      # setup_database
       require_app
       require_routes
     end
@@ -28,6 +30,8 @@ module Simpler
     def call(env)
       route = @router.route_for(env)
       if route
+        env['simpler.params'] ||= {}
+        env['simpler.params'].merge!(route.params)
         controller = route.controller.new(env)
         action = route.action
         make_response(controller, action)
